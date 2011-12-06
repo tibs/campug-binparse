@@ -11,17 +11,19 @@ class UInt8(Field):
     pass
 
 class MetaStructure(type):
-    def __new__(metaclass, klass, bases, attributes, *args, **kwargs):
+
+    def __new__(metaclass, class_name, bases, attributes):
         print 'm.__new__'
         print 'metaclass ', metaclass
-        print 'class     ', klass
+        print 'class     ', class_name
         print 'bases     ', bases
         print 'attributes', attributes
         print 'args     ', args
         print 'kwargs   ',kwargs
         for k in attributes:
             Field.names[attributes[k]] = k
-        return type(klass, bases, attributes)
+        return type.__new__(metaclass, class_name, bases, attributes)
+
     def __init__(self, *args, **kwargs):
         print 'm.__init__', args, kwargs
 
