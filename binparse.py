@@ -1,8 +1,16 @@
-﻿class Field(object):
+﻿import pprint
+
+class Field(object):
+    fields = []
     order = {}
     names = {}
     def __init__(self):
         Field.order[self] = len(Field.order)
+        Field.fields.append(self)
+
+    def __repr__(self):
+        return '<{0} {1}>'.format(Field.names[self],
+                                           self.__class__.__name__)
 
 class UInt32(Field):
     pass
@@ -13,15 +21,11 @@ class UInt8(Field):
 class MetaStructure(type):
 
     def __new__(metaclass, class_name, bases, attributes):
-        print 'm.__new__'
-        print 'metaclass ', metaclass
-        print 'class     ', class_name
-        print 'bases     ', bases
-        print 'attributes', attributes
-        print 'args     ', args
-        print 'kwargs   ',kwargs
         for k in attributes:
             Field.names[attributes[k]] = k
+            print
+            print 'add %s:%s'%(k, attributes[k])
+            pprint.pprint(Field.names)
         return type.__new__(metaclass, class_name, bases, attributes)
 
     def __init__(self, *args, **kwargs):
@@ -38,9 +42,16 @@ class Spam(Structure):
     x = UInt8()
     y = UInt8()
 
+
 spam = Spam(3, spam='beans')
-print 'Field.order', Field.order
-print 'Field.names', Field.names
+print
+print 'Field.fields', Field.fields
+print 'Field.order'
+pprint.pprint(Field.order)
+print 'Field.names'
+pprint.pprint(Field.names)
+
+
 
 # How to specify arrays?
 #    array_no1 = Array(UInt32, 4)  # simple and explicit
